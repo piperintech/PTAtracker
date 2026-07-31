@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTA Tracker - SNAP Insurance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --p-navy: #101d30;
+            --p-deep: #133566;
+            --p-royal: #1042c9;
+            --p-sky: #5a8aee;
+            --p-cream: #f4f1ec;
+            --p-white: #ffffff;
+
+            --font-display: "Arsenal", Georgia, serif;
+            --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+            --r-xs: 6px;
+            --r-sm: 10px;
+            --r-md: 14px;
+            --r-lg: 20px;
+            --r-xl: 28px;
+            --r-pill: 999px;
+
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-6: 24px;
+            --space-7: 28px;
+            --space-8: 32px;
+            --space-10: 40px;
+
+            --shadow-xs: 0 1px 2px rgba(16, 32, 64, 0.04);
+            --shadow-sm: 0 2px 6px rgba(16, 32, 64, 0.06), 0 1px 2px rgba(16, 32, 64, 0.04);
+            --shadow-md: 0 8px 20px rgba(16, 32, 64, 0.08), 0 2px 4px rgba(16, 32, 64, 0.04);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--p-cream);
+            color: var(--p-navy);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-6);
+        }
+
+        /* LOGIN */
+        .login-container {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .login-box {
+            background: var(--p-white);
+            border: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+            padding: var(--space-8);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .login-box h1 {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+            color: var(--p-royal);
+        }
+
+        .login-box .subtitle {
+            font-size: 13px;
+            color: color-mix(in srgb, var(--p-navy) 55%, var(--p-cream));
+            margin-bottom: var(--space-8);
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--p-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid color-mix(in srgb, var(--p-navy) 15%, var(--p-cream));
+            border-radius: var(--r-md);
+            font-size: 14px;
+            background: var(--p-white);
+            color: var(--p-navy);
+            font-family: var(--font-body);
+            transition: all 200ms;
+        }
+
+        .form-group input::placeholder {
+            color: color-mix(in srgb, var(--p-navy) 40%, var(--p-cream));
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--p-royal);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--p-royal) 10%, transparent);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: var(--space-3);
+            background: var(--p-royal);
+            color: var(--p-white);
+            border: none;
+            border-radius: var(--r-lg);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            margin-top: var(--space-3);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .login-btn:hover {
+            background: color-mix(in srgb, var(--p-royal) 90%, var(--p-navy));
+        }
+
+        .error-msg {
+            color: #b5382e;
+            font-size: 12px;
+            margin-top: var(--space-3);
+            text-align: center;
+            display: none;
+        }
+
+        /* DASHBOARD */
+        .dashboard {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-8);
+            padding-bottom: var(--space-6);
+            border-bottom: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+        }
+
+        .greeting {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--p-navy);
+        }
+
+        .user-info {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+        }
+
+        .user-badge {
+            background: color-mix(in srgb, var(--p-royal) 10%, var(--p-cream));
+            color: var(--p-royal);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--r-sm);
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid color-mix(in srgb, var(--p-royal) 20%, var(--p-cream));
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .logout-btn {
+            background: var(--p-white);
+            color: var(--p-royal);
+            border: 1px solid color-mix(in srgb, var(--p-royal) 30%, var(--p-cream));
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--r-md);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 11px;
+            transition: all 200ms;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-family: var(--font-body);
+        }
+
+        .logout-btn:hover {
+            background: color-mix(in srgb, var(--p-royal) 5%, var(--p-cream));
+            border-color: var(--p-royal);
+        }
+
+        /* MAIN LAYOUT */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-8);
+        }
+
+        .left-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .card {
+            background: var(--p-white);
+            border: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+            border-radius: var(--r-xl);
+            padding: var(--space-7);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--p-royal);
+            margin-bottom: var(--space-4);
+        }
+
+        /* CALENDAR */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .month-display {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--p-navy);
+        }
+
+        .nav-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid color-mix(in srgb, var(--p-navy) 15%, var(--p-cream));
+            background: var(--p-white);
+            border-radius: var(--r-md);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--p-royal);
+            font-size: 12px;
+            transition: all 200ms;
+            font-family: var(--font-body);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--p-royal);
+            background: color-mix(in srgb, var(--p-royal) 5%, var(--p-cream));
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: var(--space-4);
+        }
+
+        .day-header {
+            text-align: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: color-mix(in srgb, var(--p-navy) 40%, var(--p-cream));
+            padding: var(--space-2) 0;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 500;
+            border-radius: var(--r-sm);
+            background: var(--p-cream);
+            border: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+            color: color-mix(in srgb, var(--p-navy) 55%, var(--p-cream));
+            cursor: pointer;
+            transition: all 200ms;
+            position: relative;
+        }
+
+        .calendar-day.saturday .star {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 12px;
+            opacity: 0.4;
+            transition: opacity 200ms;
+        }
+
+        .calendar-day.saturday:hover .star {
+            opacity: 0.8;
+        }
+
+        .calendar-day.lakepoint .star {
+            opacity: 1;
+            color: var(--p-royal);
+        }
+
+        .calendar-day:hover {
+            border-color: var(--p-royal);
+        }
+
+        .calendar-day.pta {
+            background: color-mix(in srgb, var(--p-royal) 10%, var(--p-cream));
+            color: var(--p-royal);
+            border-color: var(--p-royal);
+            font-weight: 600;
+        }
+
+        .calendar-day.today {
+            border: 1.5px solid var(--p-royal);
+            font-weight: 600;
+            color: var(--p-royal);
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+        }
+
+        /* CALENDAR EVENTS LIST */
+        .events-list {
+            font-size: 11px;
+            line-height: 1.6;
+            color: color-mix(in srgb, var(--p-navy) 60%, var(--p-cream));
+            padding-top: var(--space-4);
+            border-top: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+        }
+
+        .event-item {
+            margin-bottom: var(--space-3);
+            padding: var(--space-2);
+            background: color-mix(in srgb, var(--p-royal) 5%, var(--p-cream));
+            border-radius: var(--r-sm);
+        }
+
+        .event-date {
+            font-weight: 600;
+            color: var(--p-royal);
+        }
+
+        /* FUN FACT */
+        .fun-fact {
+            background: color-mix(in srgb, var(--p-royal) 8%, var(--p-cream));
+            border-left: 3px solid var(--p-royal);
+            padding: var(--space-3);
+            border-radius: var(--r-md);
+            margin-top: var(--space-4);
+            font-size: 11px;
+            line-height: 1.5;
+            color: color-mix(in srgb, var(--p-navy) 70%, var(--p-cream));
+            font-style: italic;
+        }
+
+        .fun-fact-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--p-royal);
+            margin-bottom: var(--space-2);
+            letter-spacing: 0.05em;
+        }
+
+        /* IMPACT SECTION */
+        .impact-section {
+            margin-top: var(--space-4);
+            padding-top: var(--space-4);
+            border-top: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+        }
+
+        .impact-preview {
+            background: #fbe8e6;
+            border-left: 3px solid #b5382e;
+            padding: var(--space-3);
+            border-radius: var(--r-md);
+            font-size: 11px;
+            color: #7a211a;
+            line-height: 1.5;
+            margin-bottom: var(--space-3);
+        }
+
+        .read-more-btn {
+            width: 100%;
+            background: var(--p-white);
+            color: var(--p-royal);
+            border: 1.5px solid var(--p-royal);
+            padding: var(--space-3);
+            border-radius: var(--r-lg);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-family: var(--font-body);
+        }
+
+        .read-more-btn:hover {
+            background: color-mix(in srgb, var(--p-royal) 8%, var(--p-cream));
+        }
+
+        /* RIGHT: CONTENT */
+        .right-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        /* DONUT CHART */
+        .donut-wrapper {
+            display: flex;
+            gap: var(--space-8);
+            align-items: center;
+        }
+
+        .donut-svg-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .donut-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(16, 32, 64, 0.06));
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-number {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--p-royal);
+        }
+
+        .donut-label {
+            font-size: 9px;
+            color: color-mix(in srgb, var(--p-navy) 40%, var(--p-cream));
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .donut-stats {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .stat-item {
+            font-size: 12px;
+        }
+
+        .stat-label {
+            color: color-mix(in srgb, var(--p-navy) 40%, var(--p-cream));
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--p-royal);
+        }
+
+        .stat-value.warning {
+            color: #b8782e;
+        }
+
+        .stat-value.critical {
+            color: #b5382e;
+        }
+
+        /* REQUESTS */
+        .requests-list {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .request-item {
+            background: color-mix(in srgb, var(--p-royal) 8%, var(--p-cream));
+            padding: var(--space-4);
+            border-radius: var(--r-lg);
+            border-left: 3px solid var(--p-royal);
+            font-size: 11px;
+        }
+
+        .request-header {
+            font-weight: 600;
+            color: var(--p-navy);
+            margin-bottom: var(--space-2);
+        }
+
+        .request-detail {
+            color: color-mix(in srgb, var(--p-navy) 60%, var(--p-cream));
+            margin: var(--space-1) 0;
+            font-size: 10px;
+        }
+
+        .request-status {
+            display: inline-block;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--r-sm);
+            font-size: 9px;
+            font-weight: 700;
+            margin-top: var(--space-3);
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fbf1e0;
+            color: #b8782e;
+        }
+
+        .status-approved {
+            background: color-mix(in srgb, var(--p-royal) 10%, var(--p-cream));
+            color: var(--p-royal);
+        }
+
+        .request-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+        }
+
+        .request-actions button {
+            flex: 1;
+            padding: var(--space-2) var(--space-3);
+            font-size: 9px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--r-md);
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            transition: all 200ms;
+        }
+
+        .btn-approve {
+            background: var(--p-white);
+            color: var(--p-royal);
+            border: 1px solid var(--p-royal);
+        }
+
+        .btn-approve:hover {
+            background: color-mix(in srgb, var(--p-royal) 8%, var(--p-cream));
+        }
+
+        .btn-reject {
+            background: var(--p-white);
+            color: #b5382e;
+            border: 1px solid #b5382e;
+        }
+
+        .btn-reject:hover {
+            background: #fbe8e6;
+        }
+
+        .btn {
+            width: 100%;
+            background: var(--p-white);
+            color: var(--p-royal);
+            border: 1.5px solid var(--p-royal);
+            padding: var(--space-3);
+            border-radius: var(--r-lg);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: var(--space-4);
+            transition: all 200ms;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-family: var(--font-body);
+        }
+
+        .btn:hover {
+            background: color-mix(in srgb, var(--p-royal) 8%, var(--p-cream));
+        }
+
+        .empty-state {
+            text-align: center;
+            color: color-mix(in srgb, var(--p-navy) 40%, var(--p-cream));
+            padding: var(--space-6);
+            font-size: 11px;
+        }
+
+        /* MODALS */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(16, 29, 48, 0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-6);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--p-white);
+            border: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+            border-radius: var(--r-xl);
+            padding: var(--space-8);
+            max-width: 580px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: var(--space-6);
+            color: var(--p-navy);
+        }
+
+        .modal-title.warning {
+            color: #b5382e;
+        }
+
+        .warning-box {
+            background: #fbe8e6;
+            border-left: 4px solid #b5382e;
+            padding: var(--space-4);
+            border-radius: var(--r-md);
+            margin-bottom: var(--space-6);
+            font-size: 12px;
+            color: #7a211a;
+            line-height: 1.6;
+        }
+
+        .impact-item {
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));
+        }
+
+        .impact-item:last-child {
+            border-bottom: none;
+        }
+
+        .impact-title {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--p-navy);
+            margin-bottom: var(--space-2);
+        }
+
+        .impact-description {
+            font-size: 12px;
+            color: color-mix(in srgb, var(--p-navy) 70%, var(--p-cream));
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+            color: var(--p-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid color-mix(in srgb, var(--p-navy) 15%, var(--p-cream));
+            border-radius: var(--r-md);
+            font-size: 12px;
+            background: var(--p-white);
+            color: var(--p-navy);
+            font-family: var(--font-body);
+            transition: all 200ms;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: color-mix(in srgb, var(--p-navy) 40%, var(--p-cream));
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--p-royal);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--p-royal) 10%, transparent);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-8);
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: var(--space-3);
+            border: none;
+            border-radius: var(--r-lg);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 200ms;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-family: var(--font-body);
+        }
+
+        .btn-submit {
+            background: var(--p-white);
+            color: var(--p-royal);
+            border: 1.5px solid var(--p-royal);
+        }
+
+        .btn-submit:hover {
+            background: color-mix(in srgb, var(--p-royal) 8%, var(--p-cream));
+        }
+
+        .btn-cancel {
+            background: var(--p-white);
+            color: color-mix(in srgb, var(--p-navy) 55%, var(--p-cream));
+            border: 1px solid color-mix(in srgb, var(--p-navy) 15%, var(--p-cream));
+        }
+
+        .btn-cancel:hover {
+            background: color-mix(in srgb, var(--p-navy) 3%, var(--p-cream));
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-container" id="loginPage">
+    <div class="login-box">
+        <h1>PTA TRACKER</h1>
+        <p class="subtitle">Part Time Abandonment Tracker</p>
+        
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Sign In</button>
+            <div class="error-msg" id="errorMsg">Invalid credentials</div>
+        </form>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+    <div class="topbar">
+        <div class="greeting" id="personalizedGreeting">Good Afternoon, Jaycito</div>
+        <div class="user-info">
+            <div class="user-badge" id="userBadge">JC</div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <!-- LEFT SIDEBAR -->
+        <div class="left-sidebar">
+            <!-- CALENDAR -->
+            <div class="card">
+                <div class="card-title">Calendar</div>
+                <div class="calendar-nav">
+                    <div class="month-display" id="monthYear">Jan 2024</div>
+                    <div>
+                        <button class="nav-btn" onclick="previousMonth()">←</button>
+                        <button class="nav-btn" onclick="nextMonth()">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+                
+                <!-- EVENTS LIST -->
+                <div class="events-list">
+                    <div style="font-weight: 600; color: var(--p-royal); margin-bottom: var(--space-2); font-size: 10px; text-transform: uppercase;">PTA & Holidays</div>
+                    <div id="eventsList" style="font-size: 10px; margin-bottom: var(--space-4);"></div>
+
+                    <!-- MONTH HIGHLIGHTS INSIDE PTA & HOLIDAYS -->
+                    <div style="font-size: 9px; text-transform: uppercase; font-weight: 700; color: var(--p-royal); margin-bottom: var(--space-2); letter-spacing: 0.05em;">Highlights</div>
+                    <div id="monthHighlights" style="font-size: 11px; line-height: 1.6; color: color-mix(in srgb, var(--p-navy) 70%, var(--p-cream)); margin-bottom: var(--space-3); min-height: 24px;">
+                        <div class="empty-state" style="padding: 0; text-align: left; font-size: 11px;">No highlights yet</div>
+                    </div>
+                    <input type="text" id="highlightInput" placeholder="Add a highlight..." style="width: 100%; padding: var(--space-2) var(--space-3); font-size: 11px; border: 1px solid color-mix(in srgb, var(--p-navy) 15%, var(--p-cream)); border-radius: var(--r-sm); background: white; color: var(--p-navy); font-family: var(--font-body); margin-bottom: var(--space-2);">
+                    <button onclick="addHighlight()" style="width: 100%; background: var(--p-white); color: var(--p-royal); border: 1px solid var(--p-royal); padding: var(--space-2); border-radius: var(--r-sm); font-size: 10px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: var(--font-body); transition: all 200ms;">Add</button>
+                </div>
+            </div>
+
+            <!-- IMPACT SECTION -->
+            <div class="card">
+                <div class="card-title" style="margin-bottom: var(--space-3);">Impact Overview</div>
+                <div class="impact-preview">
+                    Each PTA hour affects: Your sister's motivation, Aria's health, operations stability, and Derek's workload.
+                </div>
+                <button class="read-more-btn" onclick="openImpactModal()">Read Full Report</button>
+            </div>
+        </div>
+
+        <!-- RIGHT CONTENT -->
+        <div class="right-content">
+            <!-- DONUT CHART -->
+            <div class="card">
+                <div class="card-title">PTA Balance</div>
+                <div class="donut-wrapper">
+                    <div class="donut-svg-container">
+                        <svg class="donut-svg" viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="color-mix(in srgb, var(--p-navy) 10%, white)" stroke-width="16"/>
+                            <circle id="donutUsed" cx="100" cy="100" r="80" fill="none" stroke="var(--p-royal)" stroke-width="16" 
+                                stroke-dasharray="0 376" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-number" id="donutNumber">0</div>
+                            <div class="donut-label">of 180 hours/year</div>
+                        </div>
+                    </div>
+                    <div class="donut-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Hours Used</div>
+                            <div class="stat-value" id="totalHours">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Remaining</div>
+                            <div class="stat-value" id="hoursRemaining">180</div>
+                        </div>
+                        <div class="stat-item" style="margin-top: var(--space-3);">
+                            <div class="stat-label">Status</div>
+                            <div class="stat-value" id="statusText" style="color: var(--p-royal);">On Track</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN: EDIT HOURS -->
+            <div class="card" id="adminEditCard" style="display: none;">
+                <div class="card-title">Manage Hours</div>
+                <form onsubmit="submitEditHours(event)">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="editDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Hours</label>
+                        <input type="number" id="editHours" min="0" max="24" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Trip/Reason</label>
+                        <input type="text" id="editReason" placeholder="NYC trip, Doctor appt..." required>
+                    </div>
+                    <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
+                        <button type="submit" style="flex: 1; background: var(--p-white); color: var(--p-royal); border: 1.5px solid var(--p-royal); padding: var(--space-3); border-radius: var(--r-lg); font-size: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-body); transition: all 200ms;" onclick="this.style.background='color-mix(in srgb, var(--p-royal) 8%, var(--p-cream))'">Add Hours</button>
+                    </div>
+                </form>
+
+                <!-- Hours History -->
+                <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid color-mix(in srgb, var(--p-navy) 8%, var(--p-cream));">
+                    <div style="font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--p-royal); margin-bottom: var(--space-3);">Record History</div>
+                    <div id="hoursHistory" style="font-size: 11px; display: flex; flex-direction: column; gap: var(--space-2);">
+                        <div class="empty-state">No records</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY -->
+            <div class="card">
+                <div class="card-title">PTA History</div>
+                <div class="requests-list" id="requestsList">
+                    <div class="empty-state">No history</div>
+                </div>
+                <button class="btn" id="newRequestBtn" onclick="openNewRequest()" style="display: none;">Request PTA</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: REQUEST PTA -->
+<div class="modal" id="requestModal">
+    <div class="modal-content">
+        <div class="modal-title">Request PTA</div>
+        <form onsubmit="submitPTARequest(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" id="ptaDateFrom" required onchange="calculateWeekdays()">
+                </div>
+
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" id="ptaDateTo" required onchange="calculateWeekdays()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Hours Calculation</label>
+                <div style="background: color-mix(in srgb, var(--p-royal) 5%, var(--p-cream)); padding: var(--space-3); border-radius: var(--r-md); font-size: 12px; color: var(--p-navy); font-weight: 500;">
+                    <div id="weekdayCalculation" style="margin-bottom: var(--space-2);">Select date range</div>
+                    <div style="font-weight: 600; color: var(--p-royal);">Total Hours: <span id="ptaHoursDisplay">0</span></div>
+                </div>
+                <input type="hidden" id="ptaHours" value="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="ptaLocation" placeholder="Beach, Mountains..." required>
+            </div>
+
+            <div class="form-group">
+                <label>With</label>
+                <input type="text" id="ptaWith" placeholder="Friends, Family..." required>
+            </div>
+
+            <div class="form-group">
+                <label>Consulted with lil sis in advance?</label>
+                <div style="display: flex; gap: var(--space-3); margin-top: var(--space-2);">
+                    <button type="button" id="consultYes" onclick="selectConsult('yes')" style="flex: 1; background: var(--p-white); color: var(--p-royal); border: 1.5px solid var(--p-royal); padding: var(--space-2); border-radius: var(--r-md); font-size: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-body); transition: all 200ms;">Yes</button>
+                    <button type="button" id="consultNo" onclick="selectConsult('no')" style="flex: 1; background: var(--p-white); color: #b5382e; border: 1.5px solid #b5382e; padding: var(--space-2); border-radius: var(--r-md); font-size: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-body); transition: all 200ms;">No</button>
+                </div>
+                <input type="hidden" id="ptaConsult" value="">
+            </div>
+
+            <div class="form-group">
+                <label>Activity</label>
+                <textarea id="ptaActivity" required></textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeModal('requestModal')">Cancel</button>
+                <button type="submit" class="btn-submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: WARNING -->
+<div class="modal" id="warningModal">
+    <div class="modal-content">
+        <div class="modal-title warning">Exceeding Limit</div>
+        <div class="warning-box">
+            This request would reach <span style="color: #7a211a; font-weight: 600;" id="projectedTotal">188</span> hours (limit: 180).<br>
+            Overages: <span style="color: #7a211a; font-weight: 600;" id="overageAmount">8</span> hours<br><br>
+            You commit to working Saturdays to compensate.
+        </div>
+        <div style="background: color-mix(in srgb, var(--p-royal) 10%, var(--p-cream)); padding: var(--space-3); border-radius: var(--r-md); margin-bottom: var(--space-6); font-size: 11px; color: var(--p-royal); font-weight: 600;">
+            Proceed with Saturday commitment?
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="cancelWarning()">Cancel</button>
+            <button class="btn-submit" onclick="confirmWarning()">Yes, Commit</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: IMPACT REPORT -->
+<div class="modal" id="impactModal">
+    <div class="modal-content">
+        <div class="modal-title">Full Impact Report</div>
+        
+        <div class="impact-item">
+            <div class="impact-title">Your Sister's Motivation & Decisions</div>
+            <div class="impact-description">
+                When you leave, you're not just taking hours—you're taking her choice to stay. She watches you abandon her at the desk with a full claims queue, asks herself why she shows up on time when you don't, and eventually stops asking. The dismotivation settles. Then, because working alone is demoralizing and the stress has nowhere to go, she makes decisions she wouldn't otherwise make—worse boundaries, shortcuts, people she wouldn't trust in better circumstances. Your absence doesn't just affect the immediate workload; it affects her judgment.
+            </div>
+        </div>
+
+        <div class="impact-item">
+            <div class="impact-title">Aria's Health & Existence</div>
+            <div class="impact-description">
+                Aria lives in your office. When you're gone, nobody waters her, nobody checks on her. Dehydration. Nutrient deficiency. She deteriorates visibly. This isn't metaphorical—it's a living thing abandoned in a climate-controlled box because her caretaker isn't there. By the time you notice, she's already given up.
+            </div>
+        </div>
+
+        <div class="impact-item">
+            <div class="impact-title">Claims Processing & Customer Service</div>
+            <div class="impact-description">
+                Every hour you're gone is an hour claims sit in the queue. Customers wait longer. Callbacks don't happen. In insurance, speed is trust, and delays are liability. The backlog doesn't absorb—it compounds. Someone else has to pick up your work or watch it fail. SNAP's reputation depends on responsive claims handling, and your absence creates operational debt.
+            </div>
+        </div>
+
+        <div class="impact-item">
+            <div class="impact-title">Mediation & Conflict in Derek's Hands</div>
+            <div class="impact-description">
+                When coverage breaks down, Derek has to manage the fallout. Mediate between frustrated colleagues, explain the delays to customers, defend the team's performance. Your PTA hours turn into Derek's crisis management. He becomes the person fielding apologies and explanations for gaps you created. That's burden you're transferring.
+            </div>
+        </div>
+
+        <div class="impact-item">
+            <div class="impact-title">Pen's Disappearance & Trust Erosion</div>
+            <div class="impact-description">
+                Small things disappear from the desk when nobody's there. Pens. Post-its. Supplies. But it's really about trust eroding. People stop asking where things are and start assuming they'll go missing. The workspace becomes less reliable, less stable. It's not just objects—it's the shared understanding that the space is cared for falling apart.
+            </div>
+        </div>
+
+        <div class="impact-item">
+            <div class="impact-title">Your Sister's Heart & Resentment</div>
+            <div class="impact-description">
+                All of this accumulates into resentment. She loves you, but she's watching you leave her alone with the work. Over and over. At some point, love and resentment can't coexist comfortably. She stops wanting to cover for you. Stops understanding why her sacrifice is acceptable while yours isn't. The relationship shifts.
+            </div>
+        </div>
+
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeModal('impactModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const USERS = {
+        jcmckinney: { password: 'N6683Z', role: 'user', name: 'Jaycito' },
+        manuelita: { password: 'manu', role: 'admin', name: 'Manu' }
+    };
+
+    let currentUser = null;
+    let currentDate = new Date();
+    let requests = [];
+    let abandonedDays = {};
+    let monthHighlights = [];
+    let lakepointDays = {}; // {user: {date: true}}
+    let ptaBalance = 0; // Will be set by loadData
+    const ptaLimit = 180; // Total available per year
+    let pendingRequest = null;
+
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const monthHolidays = {
+        0: ["New Year's Day - Jan 1"],
+        1: ["Presidents Day - Feb 19"],
+        2: ["Spring Break - Mar 15-20"],
+        3: ["Easter - Apr 9"],
+        4: ["Memorial Day - May 27"],
+        5: ["Juneteenth - Jun 19"],
+        6: ["Independence Day - Jul 4"],
+        7: ["Labor Day - Sep 2"],
+        8: ["Fall Break - Sep 15-20"],
+        9: ["Halloween - Oct 31"],
+        10: ["Thanksgiving - Nov 28"],
+        11: ["Christmas - Dec 25"]
+    };
+
+    function handleLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value.toLowerCase();
+        const password = document.getElementById('password').value;
+        
+        if (USERS[username] && USERS[username].password === password) {
+            currentUser = { username, ...USERS[username] };
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            initializeDashboard();
+        } else {
+            document.getElementById('errorMsg').style.display = 'block';
+            document.getElementById('password').value = '';
+        }
+    }
+
+    function handleLogout() {
+        if (confirm('Sign out?')) {
+            currentUser = null;
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboard').classList.remove('active');
+        }
+    }
+
+    function initializeDashboard() {
+        // Personalized greeting
+        document.getElementById('personalizedGreeting').textContent = `Good Afternoon, ${currentUser.name}`;
+        
+        document.getElementById('userBadge').textContent = currentUser.name;
+        document.getElementById('newRequestBtn').style.display = currentUser.role === 'user' ? 'block' : 'none';
+        document.getElementById('adminEditCard').style.display = currentUser.role === 'admin' ? 'block' : 'none';
+        loadData();
+        renderCalendar();
+        updateStats();
+        loadRequests();
+        loadHoursHistory();
+        loadHighlights();
+        renderFunFact();
+    }
+
+    function previousMonth() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    }
+
+    function nextMonth() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        
+        document.getElementById('monthYear').textContent = `${monthNames[month].substring(0, 3)} ${year}`;
+        
+        const grid = document.getElementById('calendarGrid');
+        grid.innerHTML = '';
+        
+        const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        days.forEach(day => {
+            const header = document.createElement('div');
+            header.className = 'day-header';
+            header.textContent = day;
+            grid.appendChild(header);
+        });
+        
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+        
+        for (let i = 0; i < firstDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'calendar-day empty';
+            grid.appendChild(empty);
+        }
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dayOfWeek = new Date(year, month, day).getDay();
+            
+            if (abandonedDays[dateKey]) {
+                dayDiv.classList.add('pta');
+            }
+            
+            if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === day) {
+                dayDiv.classList.add('today');
+            }
+            
+            // Saturday functionality
+            if (dayOfWeek === 6) {
+                dayDiv.classList.add('saturday');
+                const userLakepoint = lakepointDays[currentUser.username] && lakepointDays[currentUser.username][dateKey];
+                const starSpan = document.createElement('span');
+                starSpan.className = 'star';
+                starSpan.textContent = '★';
+                if (userLakepoint) {
+                    dayDiv.classList.add('lakepoint');
+                }
+                dayDiv.appendChild(starSpan);
+                dayDiv.onclick = () => toggleLakepoint(dateKey);
+                dayDiv.textContent = day;
+                dayDiv.appendChild(starSpan);
+            } else {
+                dayDiv.textContent = day;
+            }
+            
+            grid.appendChild(dayDiv);
+        }
+        
+        renderEventsList();
+    }
+
+    function renderEventsList() {
+        const month = currentDate.getMonth();
+        const eventsList = document.getElementById('eventsList');
+        
+        let html = '<div>';
+        if (monthHolidays[month]) {
+            html += `<div style="color: var(--p-royal); margin-bottom: var(--space-2);">${monthHolidays[month][0]}</div>`;
+        }
+        
+        const year = currentDate.getFullYear();
+        const monthStr = String(month + 1).padStart(2, '0');
+        let ptaCount = 0;
+        
+        for (const dateKey in abandonedDays) {
+            if (dateKey.startsWith(`${year}-${monthStr}`)) {
+                ptaCount++;
+            }
+        }
+        
+        html += `<div>PTA Days: ${ptaCount}</div>`;
+        html += '</div>';
+        
+        eventsList.innerHTML = html;
+    }
+
+    function renderFunFact() {
+        // Kept for backwards compatibility, now does nothing
+    }
+
+    function loadHighlights() {
+        const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
+        const monthKey = `${year}-${month}`;
+        
+        const container = document.getElementById('monthHighlights');
+        const monthHighlightsList = monthHighlights.filter(h => h.key === monthKey);
+        
+        if (monthHighlightsList.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="padding: 0; text-align: left; font-size: 11px;">No highlights yet</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        monthHighlightsList.forEach((h, idx) => {
+            const item = document.createElement('div');
+            item.style.cssText = 'margin-bottom: var(--space-2); padding: var(--space-2); background: white; border-radius: var(--r-sm); display: flex; justify-content: space-between; align-items: center;';
+            item.innerHTML = `
+                <div style="flex: 1;">${h.text}</div>
+                <button onclick="deleteHighlight('${h.key}', ${idx})" style="background: white; color: #b5382e; border: 1px solid #b5382e; padding: var(--space-1) var(--space-2); border-radius: var(--r-sm); font-size: 9px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: var(--font-body);">Delete</button>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function addHighlight() {
+        const input = document.getElementById('highlightInput');
+        const text = input.value.trim();
+        
+        if (!text) return;
+        
+        const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
+        const monthKey = `${year}-${month}`;
+        
+        monthHighlights.push({
+            key: monthKey,
+            text: text,
+            addedBy: currentUser.name
+        });
+        
+        saveData();
+        loadHighlights();
+        input.value = '';
+    }
+
+    function deleteHighlight(monthKey, idx) {
+        if (confirm('Delete this highlight?')) {
+            const itemsForMonth = monthHighlights.filter(h => h.key === monthKey);
+            if (idx >= 0 && idx < itemsForMonth.length) {
+                const itemToRemove = itemsForMonth[idx];
+                monthHighlights = monthHighlights.filter(h => h !== itemToRemove);
+                saveData();
+                loadHighlights();
+            }
+        }
+    }
+
+    function toggleLakepoint(date) {
+        const username = currentUser.username;
+        if (!lakepointDays[username]) lakepointDays[username] = {};
+        
+        if (lakepointDays[username][date]) {
+            delete lakepointDays[username][date];
+        } else {
+            lakepointDays[username][date] = true;
+        }
+        
+        saveData();
+        renderCalendar();
+        updateChurchWeeks();
+    }
+
+    function updateChurchWeeks() {
+        // Find Saturdays where both JC and Manu marked lakepoint
+        let churchWeeks = 0;
+        const jcDays = lakepointDays['jcmckinney'] || {};
+        const manuDays = lakepointDays['manuelita'] || {};
+        
+        for (const date in jcDays) {
+            if (manuDays[date]) {
+                churchWeeks++;
+            }
+        }
+        
+        const churchCard = document.getElementById('churchWeeksCard');
+        if (churchCard) {
+            const churchWeeksDisplay = document.getElementById('churchWeeksCount');
+            churchWeeksDisplay.textContent = churchWeeks;
+        }
+    }
+
+    function updateStats() {
+        const remaining = ptaLimit - ptaBalance;
+        document.getElementById('totalHours').textContent = ptaBalance;
+        document.getElementById('hoursRemaining').textContent = remaining;
+        document.getElementById('donutNumber').textContent = ptaBalance;
+        
+        const percentage = (ptaBalance / ptaLimit) * 100;
+        const circumference = 2 * Math.PI * 80;
+        document.getElementById('donutUsed').style.strokeDasharray = `${circumference * percentage / 100} ${circumference}`;
+        
+        const donutUsed = document.getElementById('donutUsed');
+        const statusText = document.getElementById('statusText');
+        const remainingElement = document.getElementById('hoursRemaining');
+        
+        if (ptaBalance > ptaLimit) {
+            donutUsed.style.stroke = '#b5382e';
+            statusText.textContent = 'OVERDUE';
+            statusText.style.color = '#b5382e';
+            remainingElement.style.color = '#b5382e';
+        } else if (ptaBalance >= 150) {
+            donutUsed.style.stroke = '#b8782e';
+            statusText.textContent = 'WARNING';
+            statusText.style.color = '#b8782e';
+            remainingElement.style.color = '#b8782e';
+        } else {
+            donutUsed.style.stroke = 'var(--p-royal)';
+            statusText.textContent = 'On Track';
+            statusText.style.color = 'var(--p-royal)';
+            remainingElement.style.color = 'var(--p-royal)';
+        }
+    }
+
+    function openNewRequest() {
+        document.getElementById('ptaConsult').value = '';
+        document.getElementById('consultYes').style.background = 'var(--p-white)';
+        document.getElementById('consultNo').style.background = 'var(--p-white)';
+        document.getElementById('ptaDateFrom').value = '';
+        document.getElementById('ptaDateTo').value = '';
+        document.getElementById('weekdayCalculation').textContent = 'Select date range';
+        document.getElementById('ptaHours').value = '0';
+        document.getElementById('ptaHoursDisplay').textContent = '0';
+        document.getElementById('requestModal').classList.add('active');
+    }
+
+    function openImpactModal() {
+        document.getElementById('impactModal').classList.add('active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    function submitPTARequest(event) {
+        event.preventDefault();
+        
+        const consultation = document.getElementById('ptaConsult').value;
+        if (!consultation) {
+            alert('Please select whether you consulted with lil sis');
+            return;
+        }
+        
+        const hours = parseInt(document.getElementById('ptaHours').value);
+        if (hours === 0) {
+            alert('Please select a valid date range');
+            return;
+        }
+        
+        const newBalance = ptaBalance + hours;
+        
+        if (newBalance > ptaLimit) {
+            pendingRequest = {
+                hours,
+                dateFrom: document.getElementById('ptaDateFrom').value,
+                dateTo: document.getElementById('ptaDateTo').value,
+                location: document.getElementById('ptaLocation').value,
+                withWho: document.getElementById('ptaWith').value,
+                activity: document.getElementById('ptaActivity').value,
+                consultation: consultation
+            };
+            
+            document.getElementById('projectedTotal').textContent = newBalance;
+            document.getElementById('overageAmount').textContent = newBalance - ptaLimit;
+            closeModal('requestModal');
+            document.getElementById('warningModal').classList.add('active');
+        } else {
+            createRequest(hours, document.getElementById('ptaDateFrom').value, 
+                         document.getElementById('ptaDateTo').value,
+                         document.getElementById('ptaLocation').value, 
+                         document.getElementById('ptaWith').value, 
+                         document.getElementById('ptaActivity').value,
+                         consultation);
+        }
+    }
+
+    function confirmWarning() {
+        if (pendingRequest) {
+            createRequest(pendingRequest.hours, pendingRequest.dateFrom, 
+                         pendingRequest.dateTo, pendingRequest.location, pendingRequest.withWho, 
+                         pendingRequest.activity, pendingRequest.consultation);
+            pendingRequest = null;
+        }
+        closeModal('warningModal');
+    }
+
+    function cancelWarning() {
+        pendingRequest = null;
+        closeModal('warningModal');
+        openNewRequest();
+    }
+
+    function createRequest(hours, dateFrom, dateTo, location, withWho, activity, consultation) {
+        requests.push({
+            id: Date.now(),
+            user: currentUser.username,
+            hours,
+            dateFrom,
+            dateTo,
+            location,
+            withWho,
+            activity,
+            consultation: consultation || 'unknown',
+            timestamp: new Date().toLocaleString(),
+            status: 'pending'
+        });
+        
+        abandonedDays[dateFrom] = hours;
+        ptaBalance += hours;
+        saveData();
+        loadRequests();
+        renderCalendar();
+        updateStats();
+        
+        document.getElementById('requestModal').querySelector('form').reset();
+        document.getElementById('ptaConsult').value = '';
+        document.getElementById('consultYes').style.background = 'var(--p-white)';
+        document.getElementById('consultNo').style.background = 'var(--p-white)';
+        closeModal('requestModal');
+    }
+
+    function approveRequest(id) {
+        const req = requests.find(r => r.id === id);
+        if (req) req.status = 'approved';
+        saveData();
+        loadRequests();
+    }
+
+    function rejectRequest(id) {
+        const req = requests.find(r => r.id === id);
+        if (req) {
+            req.status = 'rejected';
+            ptaBalance -= req.hours;
+            delete abandonedDays[req.dateFrom || req.date];
+        }
+        saveData();
+        loadRequests();
+        renderCalendar();
+        updateStats();
+    }
+
+    function deleteRequest(id) {
+        if (!confirm('Delete this PTA request?')) return;
+        
+        const idx = requests.findIndex(r => r.id === id);
+        if (idx !== -1) {
+            const req = requests[idx];
+            ptaBalance -= req.hours;
+            delete abandonedDays[req.dateFrom || req.date];
+            requests.splice(idx, 1);
+        }
+        saveData();
+        loadRequests();
+        renderCalendar();
+        updateStats();
+    }
+
+    function calculateWeekdays() {
+        const fromDate = document.getElementById('ptaDateFrom').value;
+        const toDate = document.getElementById('ptaDateTo').value;
+        
+        if (!fromDate || !toDate) return;
+        
+        const start = new Date(fromDate);
+        const end = new Date(toDate);
+        
+        if (start > end) {
+            document.getElementById('weekdayCalculation').textContent = 'Invalid date range';
+            document.getElementById('ptaHours').value = '0';
+            document.getElementById('ptaHoursDisplay').textContent = '0';
+            return;
+        }
+        
+        let weekdayCount = 0;
+        let current = new Date(start);
+        
+        while (current <= end) {
+            const dayOfWeek = current.getDay();
+            // 0 = Sunday, 6 = Saturday
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                weekdayCount++;
+            }
+            current.setDate(current.getDate() + 1);
+        }
+        
+        const totalHours = weekdayCount * 8;
+        document.getElementById('weekdayCalculation').textContent = `${weekdayCount} weekdays × 8 hours`;
+        document.getElementById('ptaHours').value = totalHours;
+        document.getElementById('ptaHoursDisplay').textContent = totalHours;
+    }
+
+    function selectConsult(value) {
+        document.getElementById('ptaConsult').value = value;
+        
+        // Update button styles
+        const yesBtn = document.getElementById('consultYes');
+        const noBtn = document.getElementById('consultNo');
+        
+        if (value === 'yes') {
+            yesBtn.style.background = 'color-mix(in srgb, var(--p-royal) 8%, var(--p-cream))';
+            noBtn.style.background = 'var(--p-white)';
+        } else if (value === 'no') {
+            noBtn.style.background = '#fbe8e6';
+            yesBtn.style.background = 'var(--p-white)';
+        }
+    }
+
+    function loadRequests() {
+        const list = document.getElementById('requestsList');
+        list.innerHTML = '';
+        
+        // Display pending requests
+        const displayRequests = currentUser.role === 'admin' 
+            ? requests 
+            : requests.filter(r => r.user === currentUser.username);
+        
+        if (displayRequests.length === 0 && currentUser.role !== 'admin') {
+            list.innerHTML = '<div class="empty-state">No requests yet</div>';
+            return;
+        }
+        
+        displayRequests.forEach(req => {
+            const item = document.createElement('div');
+            item.className = 'request-item';
+            
+            const dateRange = `${req.dateFrom || req.date} to ${req.dateTo || req.date}`;
+            const weekdayCount = req.dateTo ? calculateWeekdaysCount(req.dateFrom, req.dateTo) : 'N/A';
+            const calculation = req.dateTo ? `${weekdayCount} weekdays × 8 hours` : '';
+            
+            let html = `
+                <div class="request-header">${req.hours}h · ${req.user}</div>
+                <div class="request-detail"><strong>Dates:</strong> ${dateRange}</div>
+                ${calculation ? `<div class="request-detail"><strong>Calculation:</strong> ${calculation}</div>` : ''}
+                <div class="request-detail"><strong>Location:</strong> ${req.location}</div>
+                <div class="request-detail"><strong>With:</strong> ${req.withWho}</div>
+                <div class="request-detail"><strong>Activity:</strong> ${req.activity}</div>
+                <div class="request-detail"><strong>Consulted with lil sis:</strong> <span style="font-weight: 600; color: ${req.consultation === 'yes' ? 'var(--p-royal)' : '#b5382e'};">${req.consultation === 'yes' ? 'Yes' : 'No'}</span></div>
+                <span class="request-status status-${req.status}">${req.status}</span>
+            `;
+            
+            if (currentUser.role === 'admin') {
+                if (req.status === 'pending') {
+                    html += `<div class="request-actions" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-2);">
+                        <button class="btn-approve" onclick="approveRequest(${req.id})">Approve</button>
+                        <button class="btn-reject" onclick="rejectRequest(${req.id})">Reject</button>
+                        <button class="btn-reject" onclick="deleteRequest(${req.id})" style="background: var(--p-white); color: #b5382e; border: 1.5px solid #b5382e;">Delete</button>
+                    </div>`;
+                } else {
+                    html += `<div class="request-actions">
+                        <button class="btn-reject" onclick="deleteRequest(${req.id})" style="background: var(--p-white); color: #b5382e; border: 1.5px solid #b5382e; width: 100%;">Delete</button>
+                    </div>`;
+                }
+            }
+            
+            item.innerHTML = html;
+            list.appendChild(item);
+        });
+    }
+
+    function calculateWeekdaysCount(dateFrom, dateTo) {
+        const start = new Date(dateFrom);
+        const end = new Date(dateTo);
+        let count = 0;
+        let current = new Date(start);
+        
+        while (current <= end) {
+            const dayOfWeek = current.getDay();
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                count++;
+            }
+            current.setDate(current.getDate() + 1);
+        }
+        
+        return count;
+    }
+
+    function saveData() {
+        localStorage.setItem('ptaData', JSON.stringify({ requests, abandonedDays, monthHighlights, lakepointDays, ptaBalance }));
+    }
+
+    function loadData() {
+        // RESTART: Clear all old data and start fresh from 0
+        localStorage.removeItem('ptaData');
+        
+        // Initialize with clean slate
+        requests = [];
+        abandonedDays = {};
+        monthHighlights = [];
+        lakepointDays = {};
+        ptaBalance = 0;
+        
+        saveData();
+    }
+
+    function submitEditHours(event) {
+        event.preventDefault();
+        
+        const date = document.getElementById('editDate').value;
+        const hours = parseInt(document.getElementById('editHours').value);
+        const reason = document.getElementById('editReason').value;
+        
+        const oldHours = abandonedDays[date] || 0;
+        abandonedDays[date] = hours;
+        ptaBalance = ptaBalance - oldHours + hours;
+        
+        saveData();
+        loadHoursHistory();
+        renderCalendar();
+        updateStats();
+        
+        event.target.reset();
+    }
+
+    function loadHoursHistory() {
+        const history = document.getElementById('hoursHistory');
+        const dates = Object.keys(abandonedDays).sort();
+        
+        if (dates.length === 0) {
+            history.innerHTML = '<div class="empty-state">No records</div>';
+            return;
+        }
+
+        history.innerHTML = '';
+        dates.forEach(date => {
+            const hours = abandonedDays[date];
+            const d = new Date(date);
+            const dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+            
+            const item = document.createElement('div');
+            item.style.cssText = `
+                background: color-mix(in srgb, var(--p-royal) 5%, var(--p-cream));
+                padding: var(--space-2) var(--space-3);
+                border-radius: var(--r-md);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 3px solid var(--p-royal);
+            `;
+            item.innerHTML = `
+                <div>
+                    <div style="font-weight: 600; color: var(--p-navy);">${dateStr}</div>
+                    <div style="color: color-mix(in srgb, var(--p-navy) 55%, var(--p-cream));">${hours} hours</div>
+                </div>
+                <button onclick="deleteHour('${date}')" style="background: white; color: #b5382e; border: 1px solid #b5382e; padding: var(--space-1) var(--space-2); border-radius: var(--r-sm); font-size: 9px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: var(--font-body); transition: all 200ms;">Delete</button>
+            `;
+            history.appendChild(item);
+        });
+    }
+
+    function deleteHour(date) {
+        if (confirm(`Delete ${abandonedDays[date]} hours for ${date}?`)) {
+            const hours = abandonedDays[date];
+            ptaBalance -= hours;
+            delete abandonedDays[date];
+            saveData();
+            loadHoursHistory();
+            renderCalendar();
+            updateStats();
+        }
+    }
+
+    window.onclick = e => {
+        if (e.target.classList?.contains('modal')) e.target.classList.remove('active');
+    };
+
+    window.addEventListener('DOMContentLoaded', loadData);
+</script>
+
+</body>
+</html>
